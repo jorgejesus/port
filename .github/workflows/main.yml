@@ -1,13 +1,12 @@
 on: [push]
 name: port_app_build
-
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         steps:
         # checkout the repo
         - name: 'Checkout GitHub Action'
-          uses: actions/checkout@main
+          uses: actions/checkout@uva.port-v1.0.1
 
         - name: 'Login via Azure CLI'
           uses: azure/login@v1
