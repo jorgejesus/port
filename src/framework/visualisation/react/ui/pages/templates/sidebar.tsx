@@ -9,7 +9,7 @@ export const Sidebar = (props: SidebarProps): JSX.Element => {
       <div className='flex-wrap flex flex-row'>
         <div className='flex-grow' />
         <div className='h-logo'>
-          <img src={props.logo} />
+        <img width="50%" height="50%" src={props.logo} />
         </div>
         <div className='flex-grow' />
       </div>

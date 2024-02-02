@@ -7,7 +7,7 @@ import { ReactFactoryContext } from '../../factory'
 import { PrimaryButton } from '../elements/button'
 import { CheckBox } from '../elements/check_box'
 import { Label, Title1 } from '../elements/text'
-import LogoSvg from '../../../../../assets/images/logo.svg'
+import LogoSvg from '../../../../../assets/images/logo_uva.svg'
 import { Footer } from './templates/footer'
 import { Page } from './templates/page'
 import { Sidebar } from './templates/sidebar'
@@ -54,16 +54,36 @@ export const SplashScreen = (props: Props): JSX.Element => {
   const enDescription: JSX.Element = (
     <>
       <div className='text-bodylarge font-body text-grey1'>
-        <div className='mb-4 text-bodylarge font-body text-grey1'>
-          You are about to start the process of donating your data to a research institute. The data that we ask you to donate will be used for academic research to gain insight into how platforms work.
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          Thank you for participating on the study <span style={{ fontWeight: 'bolder' }}>"Extraversion influence on social media posts, with focus in Instagram"</span> 
+          and for donating you data as Data Download Packages (DDPs).
         </div>
-        <div className='mb-4 text-bodylarge font-body text-grey1'>
-          We will walk you through this process step by step. During this process no data is stored or sent to a server. You can delete rows from the data before donating. Data will only be donated and stored when you click the button “Yes, donate” on the page that shows your data.
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+        Watch the video below to understand what data donation is, and how <span style={{ fontWeight: 'bolder' }}>YOU</span> can help researchers
         </div>
-        <div className='mb-6 text-bodylarge font-body text-grey1'>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/O_kYejQIaK8?autoplay=0&mute=1"></iframe> 
+        </div>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          Our reseachers are interrest on your Instagram data that need to be as a Data Download Package (zip file with all content provided by instagram).
+          Please notice that it may take up to <span style={{ fontWeight: 'bolder' }}>14 days for Instagram to send you the data</span>.  
+        </div>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+        The video below instruct you how to request and recieve your personal data from Instagram.
+        </div>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/dPPXEefnviI?autoplay=0&mute=1"></iframe> 
+        </div>
+        
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          We will walk you through this process step by step. Staring with 2 basic questions about yourself, 
+          and during data loading, <span style={{ fontWeight: 'bolder' }}>NO</span> data is stored or sent to a server. 
+          You can delete rows from the data before donating. Data will only be donated and stored when you click the button “Yes, donate” on the page that shows your data.
+        </div>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
           By clicking the button “<span className='font-bodybold'>Yes, donate</span>”:
         </div>
-        <div className='flex flex-col gap-3 mb-6'>
+        <div className='flex flex-col gap-3 mb-8'>
           <Bullet>
             <div>you fully and voluntarily agree to donate your data for this research.</div>
           </Bullet>
@@ -75,7 +95,7 @@ export const SplashScreen = (props: Props): JSX.Element => {
           </Bullet>
         </div>
         <div className='mb-10'>
-          This website keeps track of your activity - for example on which pages of this website you click - as part of this research. More information can be found on our privacy page.
+          This website keeps cookies or anyother information  - for example on which pages of this website you click - as part of this research. More information can be found on our privacy page.
         </div>
       </div>
     </>
@@ -83,29 +103,49 @@ export const SplashScreen = (props: Props): JSX.Element => {
 
   const nlDescription: JSX.Element = (
     <>
-      <div className='text-bodylarge font-body text-grey1'>
-        <div className='mb-4'>
-          U kunt zo uw gegevens gaan doneren voor een onderzoek van een onderzoeksinstituut. De gegevens die we u vragen te doneren worden gebruikt voor wetenschappelijke onderzoek om inzicht te krijgen in de werkwijze van sociale media.
+        <div className='text-bodylarge font-body text-grey1'>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          Thank you for participating on the study <span style={{ fontWeight: 'bolder' }}>"Extraversion influence on social media posts, with focus in Instagram"</span> 
+          and for donating you data as Data Download Packages (DDPs).
         </div>
-        <div className='mb-4'>
-          We leggen u stap voor stap wat er van u verwacht wordt. Tijdens deze stappen worden geen gegevens opgeslagen of naar een server verstuurd. U kunt zelf rijen uit uw data verwijderen die u niet wilt doneren. Pas als u de vraag krijgt of u de gegevens wilt doneren en u op de knop “Ja, doneer” klikt, worden de gegevens gedoneerd en opgeslagen.
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+        Watch the video below to understand what data donation is, and how <span style={{ fontWeight: 'bolder' }}>YOU</span> can help researchers
         </div>
-        <div className='mb-4'>
-          Door op de knop “<span className='font-bodybold'>Ja, doneer</span>” te klikken:
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/O_kYejQIaK8?autoplay=0&mute=1"></iframe> 
         </div>
-        <div className='flex flex-col gap-3 mb-6'>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          Our reseachers are interrest on your Instagram data that need to be as a Data Download Package (zip file with all content provided by instagram).
+          Please notice that it may take up to <span style={{ fontWeight: 'bolder' }}>14 days for Instagram to send you the data</span>.  
+        </div>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+        The video below instruct you how to request and recieve your personal data from Instagram.
+        </div>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/dPPXEefnviI?autoplay=0&mute=1"></iframe> 
+        </div>
+        
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          We will walk you through this process step by step. Staring with 2 basic questions about yourself, 
+          and during data loading, <span style={{ fontWeight: 'bolder' }}>NO</span> data is stored or sent to a server. 
+          You can delete rows from the data before donating. Data will only be donated and stored when you click the button “Yes, donate” on the page that shows your data.
+        </div>
+        <div className='mb-8 text-bodylarge font-body text-grey1'>
+          By clicking the button “<span className='font-bodybold'>Yes, donate</span>”:
+        </div>
+        <div className='flex flex-col gap-3 mb-8'>
           <Bullet>
-            <div>Geeft u volledig en vrijwillig toestemming om uw data te doneren voor dit onderzoek.'</div>
+            <div>you fully and voluntarily agree to donate your data for this research.</div>
           </Bullet>
           <Bullet>
-            <div>Geeft u aan te weten dat als uw gegevens worden gebruikt in wetenschappelijke publicaties, of deze op een andere manier openbaar worden gemaakt, dit dan anoniem gebeurt.</div>
+            <div>you are aware that when your data is used for academic publications, or made publicly available in some other form, this will be anonymous.</div>
           </Bullet>
           <Bullet>
-            <div>Geeft u aan te weten dat u het recht hebt om uw toestemming binnen in te trekken.</div>
+            <div>you are aware that you have the right to withdraw your permission.</div>
           </Bullet>
         </div>
         <div className='mb-10'>
-          Deze website houdt ook uw activiteiten bij – bijvoorbeeld op welke pagina’s van deze website u klikt – als deel van dit onderzoek. U kunt meer informatie op onze privacy pagina vinden.
+          This website keeps cookies or anyother information  - for example on which pages of this website you click - as part of this research. More information can be found on our privacy page.
         </div>
       </div>
     </>
