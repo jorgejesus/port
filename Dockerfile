@@ -43,8 +43,7 @@ RUN npm run dev:build
 #RUN npm run archive
 #RUN npm run lint --verbose
 
-RUN chown -R  node:node /code
-USER node
+#RUN chown -R  node:node /code
 EXPOSE 80
 
 ENTRYPOINT ["npm", "run"]
