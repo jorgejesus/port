@@ -33,7 +33,7 @@ FROM setup-node as release
 
 ARG release_tag=release
 ARG build_type=release
-
+ENV PORT=80
 RUN apt-get update && apt install -y zip python3 python3-pip python-is-python3 python3-poetry
 COPY --from=build-py /py/dist/* public/
 RUN npm install -g npm-run-all ts-standard
@@ -45,7 +45,7 @@ RUN npm run dev:build
 
 RUN chown -R  node:node /code
 USER node
-EXPOSE 3000
+EXPOSE 80
 
 ENTRYPOINT ["npm", "run"]
 CMD ["dev:start"]
