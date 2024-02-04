@@ -4,10 +4,11 @@ import io
 import port.api.props as props
 from port.api.commands import (CommandSystemDonate, CommandUIRender)
 
-from port.api.questionare import questions, find_question_by_value,  find_id_by_value
+from port.api.questionare import questions 
+from port.api.utils import find_question_by_value, find_id_by_value
 import pandas as pd
 import zipfile
-
+import json
 
 import base64
 
@@ -108,7 +109,12 @@ def process(sessionId):
                 # [{"zip_content":[{"filename":"photos/202010/0a8abe05d3522dad75da53df6f51e6c2.jpg","compressed size":"86988","size":"92491"},{"filename":"photos/202010/2b815e891c6c3d325f91772175dc57b3.jpg","compressed size":"159094","size":"159220"},{"filename":"photos/202010/2c855e509a802f5f85b483e5b55807c1.jpg","compressed size":"124918","size":"125071"}]},{"log_messages":[{"type":"debug","message":"Instagram: start"},{"type":"debug","message":"Instagram: prompt file"},{"type":"debug","message":"Instagram: extracting file"},{"type":"debug","message":"Instagram: extraction successful, go to consent form"},{"type":"debug","message":"Instagram: prompt consent"}]},{"user_omissions":"[]"}]
                 # Better to do the base64 on the  doSomethingWithTheFile --> extract_zip_contents
                 # Here we can reopen the zip file and inject the binary content into PayLoadJSON
+                #file_encoded = base64.b64encode(file_content)
                 meta_data.append(("debug", f"{platform}: donate consent data"))
+                print("LOOKING AT CONSENT")
+                tmp=json.loads(consent_result.value)
+                # this is tmp [{'zip_content': [{'filename': 'photos/202010/0a8abe05d3522dad75da53df6f51e6c2.jpg', 'compressed size': '86988', 'size': '92491'}, {'filename': 'photos/202010/2b815e891c6c3d325f91772175dc57b3.jpg', 'compressed size': '159094', 'size': '159220'}, {'filename': 'photos/202010/2c855e509a802f5f85b483e5b55807c1.jpg', 'compressed size': '124918', 'size': '125071'}]}, {'quiz_content': [{'id': 'Q1_2', 'Question': '1. How often do you seek social interactions in your daily life?', 'Answer': 'A few times a week, I attend a meetup where I live'}, {'id': 'Q2_3', 'Question': '2. Do you feel energized and rejuvenated by spending time with people?', 'Answer': 'More or less, I think it depends who are the persons'}, {'id': 'Q3_5', 'Question': '3. How comfortable do you feel being the center of attention in a group setting?', 'Answer': 'If someone looks at me,  I will run to the emergency exit'}]}, {'log_messages': [{'type': 'debug', 'message': 'Instagram: start'}, {'type': 'debug', 'message': 'Instagram: prompt file'}, {'type': 'debug', 'message': 'Instagram: extracting file'}, {'type': 'debug', 'message': 'Instagram: extraction successful, go to consent form'}, {'type': 'debug', 'message': 'Instagram: prompt consent'}]}, {'user_omissions': '[]'}]
+                print(tmp)
                 yield donate(f"{sessionId}-{platform}", consent_result.value)
 
     yield render_end_page()
@@ -183,7 +189,6 @@ def extract_zip_contents(zip_file):
                 with z.open(file_name) as file:
                     file_content = file.read()
                     # Convert the content to base64
-                    file_encoded = base64.b64encode(file_content)
                     info = z.getinfo(file_name)
                     data.append((file_name, info.compress_size, info.file_size))
         return data
@@ -207,7 +212,7 @@ def prompt_consent(id, data, data_quiz, meta_data,):
     quiz_frame=pd.DataFrame(data_quiz_to_rows(data_quiz), columns=["id", "Question","Answer"])
     table_quiz = props.PropsUIPromptConsentFormTable("quiz_content", quiz_title, quiz_frame)
     
-    data_frame = pd.DataFrame(data, columns=["filename", "compressed size", "size"])
+    data_frame = pd.DataFrame(data, columns=["filename", "compressed size", "size" ])
     table_zip = props.PropsUIPromptConsentFormTable("zip_content", table_title, data_frame)
     meta_frame = pd.DataFrame(meta_data, columns=["type", "message"])
     meta_table = props.PropsUIPromptConsentFormTable("log_messages", log_title, meta_frame)
