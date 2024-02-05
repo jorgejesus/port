@@ -25,6 +25,29 @@ export default class WorkerProcessingEngine implements ProcessingEngine {
     this.trackUserStart(sessionId)
   }
 
+  async sendPayloadToServer(payload: any): Promise<void> {
+    try {
+      const response = await fetch('https://port-backend.terraops.org/append/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('[ReactEngine] POST request successful:', data);
+    } catch (error) {
+      console.error('[ReactEngine] POST request failed:', error instanceof Error ? error.message : error);
+    }
+  }
+
+
+
   trackUserStart (sessionId: string): void {
     const key = `${sessionId}-tracking`
     const jsonString = JSON.stringify({ message: 'user started' })
@@ -43,11 +66,36 @@ export default class WorkerProcessingEngine implements ProcessingEngine {
         console.log('[ReactEngine] received: initialiseDone')
         this.resolveInitialized()
         break
-
       case 'runCycleDone':
-        console.log('[ReactEngine] received: event', event.data.scriptEvent)
+          console.log('[ReactEngine] received: event', event.data.scriptEvent);
+          if (event.data.scriptEvent.__type__ === 'CommandSystemDonate') {
+            console.log("[ReactEngine] CommandSystemDonate event detected, sending payload to REST endpoint");
+            // Call the helper function to send the payload
+            this.sendPayloadToServer(event.data.scriptEvent).then(() => {
+                console.log("[ReactEngine] Payload sent successfully.");
+            }).catch((error) => {
+                console.error("[ReactEngine] Error sending payload:", error);
+            });
+        } else {
+            console.log("[ReactEngine] Event type is not CommandSystemDonate, ignoring.");
+        }
         this.handleRunCycle(event.data.scriptEvent)
-        break
+        break;
+
+
+          // Call the helper function to send the payload
+         // this.sendPayloadToServer(event.data).then(() => {
+         //   console.log("[ReactEngine] Payload sent successfully.");
+         // }).catch((error) => {
+         //   console.error("[ReactEngine] Error sending payload:", error);
+         // });
+         // this.handleRunCycle(event.data.scriptEvent)
+         // break;
+      //case 'runCycleDone':
+      //  console.log('[ReactEngine] received: event', event.data.scriptEvent)
+      //  console.log("Things have ended should send data to rest")
+       // this.handleRunCycle(event.data.scriptEvent)
+       // break;
       default:
         console.log(
           '[ReactEngine] received unsupported flow event: ',
@@ -112,4 +160,6 @@ export default class WorkerProcessingEngine implements ProcessingEngine {
       )
     }
   }
-}
+
+  
+} // end orkerProcessingEngine 
