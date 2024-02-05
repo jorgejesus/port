@@ -27,7 +27,6 @@ RUN poetry install
 RUN poetry build --format wheel
 RUN ls /py/dist
 
-
 # Final stage for release
 FROM setup-node as release
 
@@ -40,10 +39,6 @@ RUN npm install -g npm-run-all ts-standard
 
 RUN npx --no-cache update-browserslist-db@latest
 RUN npm run dev:build
-#RUN npm run archive
-#RUN npm run lint --verbose
-
-#RUN chown -R  node:node /code
 EXPOSE 80
 
 ENTRYPOINT ["npm", "run"]
