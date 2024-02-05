@@ -8,10 +8,10 @@ import YoutubeSvg from '../../../../../assets/images/youtube.svg'
 import TextBundle from '../../../../text_bundle'
 import { Bullet } from './bullet'
 
-const linkTwitter: string = 'https://eyra.co'
-const linkFacebook: string = 'https://eyra.co'
-const linkInstagram: string = 'https://eyra.co'
-const linkYoutube: string = 'https://eyra.co'
+const linkTwitter: string = 'https://help.twitter.com/en/managing-your-account/how-to-download-your-x-archive'
+const linkFacebook: string = 'https://www.facebook.com/help/212802592074644'
+const linkInstagram: string = 'https://help.instagram.com/181231772500920'
+const linkYoutube: string = 'https://support.google.com/youtube/answer/9315727?hl=en'
 
 interface InstructionsProps {
   platform: string
