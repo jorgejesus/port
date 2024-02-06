@@ -1,4 +1,5 @@
-# TODO: pytests for payload creation, check is base64 encoding is OS, test that only adjusted/permitted data is submitted
+# TODO: pytests for payload creation, check is base64 encoding is OS, t
+# test that only adjusted/permitted data is submitted. Selenium testing of page
 import logging
 import io
 import pandas as pd
@@ -28,12 +29,31 @@ def process(sessionId):
     step_percentage = 100 / steps
     progress = 0
 
-    # Extra info dumped in meta_data object and later donated
-    meta_data = []
-    meta_data.append(("debug", f"{platform}: start"))
-
+    # Lists to whom data will be appended
     data = None
     data_quiz = []
+
+    # Extra info dumped in meta_data object and later donated
+    meta_data = []
+
+    def log_meta_data(message, meta_data=meta_data):
+        """Nested function Logs a debug message to the meta_data list, indicating an action or state
+        relevant to the application's operation.
+
+        Parameters
+        ----------
+        message : str
+            The debug message to be added to the meta_data list.
+        meta_data : list, optional
+            The list to which the debug message will be appended.
+            If not provided, defaults to the global `meta_data` list.
+
+        """
+        meta_data.append(("debug", message))
+
+    log_meta_data("Start")
+
+    # START OF PROCESS
 
     # Autogenerate question_ids list from questions dictionary keys
     question_ids = list(questions.keys())
@@ -48,56 +68,60 @@ def process(sessionId):
 
     donate(f"{sessionId}-{platform}", "Questionary done")
     while True:
-        meta_data.append(("debug", f"{platform}: prompt file"))
+        # While loop to ensure if there is problem with file submission to
+        # redo the file submission
+        log_meta_data(f"{platform}: prompt file")
+
         promptFile = prompt_file(platform, "application/zip, text/plain")
         fileResult = yield render_donation_page(platform, promptFile, progress)
+
         if fileResult.__type__ == "PayloadString":
-            meta_data.append(("debug", f"{platform}: extracting file"))
+            log_meta_data("Extracting file")
+
             # fileResult.value is the zip file_name submitted by user
             # leaving doSomethingWithTheFile naming convention as it is :)
             extractionResult = doSomethingWithTheFile(platform, fileResult.value)
 
             if extractionResult != None:
-                meta_data.append(
-                    ("debug", f"{platform}: extraction successful, go to consent form")
-                )
+                log_meta_data("Extraction successful, go to consent form")
                 data = extractionResult
                 break
             else:
-                meta_data.append(
-                    (
-                        "debug",
-                        f"{platform}: prompt confirmation to retry file selection",
-                    )
-                )
+                log_meta_data("Prompt confirmation to retry file selection")
                 retry_result = yield render_donation_page(
                     platform, retry_confirmation(platform), progress
                 )
                 if retry_result.__type__ == "PayloadTrue":
-                    meta_data.append(("debug", f"{platform}: skip due to invalid file"))
+                    log_meta_data("Skip due to invalid file")
                     continue
                 else:
-                    meta_data.append(("debug", f"{platform}: retry prompt file"))
+                    log_meta_data("Retry prompt file")
                     break
         else:
-            meta_data.append(("debug", f"{platform}: skip to next step"))
+            log_meta_data("Skip to next step")
             break
 
         # STEP 2: ask for consent and add quiz results to be in one single JSON payload
     progress += step_percentage
 
     if data != None:
-        meta_data.append(("debug", f"{platform}: prompt consent"))
+        log_meta_data("Prompt consent")
+
         prompt = prompt_consent(platform, data, data_quiz, meta_data)
         consent_result = yield render_donation_page(platform, prompt, progress)
         progress += step_percentage
         if consent_result.__type__ == "PayloadJSON":
-            meta_data.append(("debug", f"{platform}: donate consent data"))
+            log_meta_data("Donate consent data")
 
             payload_list = json.loads(
+                # from code above and it contains the zip file name
                 consent_result.value
-            )  # from above and it contains the zip file
-            # payload_list is like this:  [{'zip_content': [{'filename': 'photos/202010/0a8abe05d3522dad75da53df6f51e6c2.jpg', 'compressed size': '86988', 'size': '92491'}, {'filename': 'photos/202010/2b815e891c6c3d325f91772175dc57b3.jpg', 'compressed size': '159094', 'size': '159220'}, {'filename': 'photos/202010/2c855e509a802f5f85b483e5b55807c1.jpg', 'compressed size': '124918', 'size': '125071'}]}, {'quiz_content': [{'id': 'Q1_2', 'Question': '1. How often do you seek social interactions in your daily life?', 'Answer': 'A few times a week, I attend a meetup where I live'}, {'id': 'Q2_3', 'Question': '2. Do you feel energized and rejuvenated by spending time with people?', 'Answer': 'More or less, I think it depends who are the persons'}, {'id': 'Q3_5', 'Question': '3. How comfortable do you feel being the center of attention in a group setting?', 'Answer': 'If someone looks at me,  I will run to the emergency exit'}]}, {'log_messages': [{'type': 'debug', 'message': 'Instagram: start'}, {'type': 'debug', 'message': 'Instagram: prompt file'}, {'type': 'debug', 'message': 'Instagram: extracting file'}, {'type': 'debug', 'message': 'Instagram: extraction successful, go to consent form'}, {'type': 'debug', 'message': 'Instagram: prompt consent'}]}, {'user_omissions': '[]'}]
+            )
+            # payload_list is like this:
+            # [{'zip_content': [{'filename': 'photos/202010/0a8..c2.jpg',
+            # 'compressed size': '86988', 'size': '92491'},....
+            # {'type': 'debug', 'message': 'Instagram: extraction successful, go to consent form'}, .....
+            # {'user_omissions': '[]'}]
             # getting dic with files paths and informations
             payload_file_dic = payload_list[0]
 
@@ -107,7 +131,8 @@ def process(sessionId):
                 for item_dic in zip_content:
                     file_to_extract = item_dic["filename"]
                     file_encoded = zip_file_to_b64(fileResult.value, file_to_extract)
-                    # THIS IS JUST A DEMO THE STRING IS TO BIG LETS CUT IT
+                    # THIS IS JUST A DEMO THE BASE64 STRING IS TO BIG, LETS CUT IT OUT
+                    # TO MAKE THINGS READABLE ON JSON PAYLOAD
                     item_dic["payload"] = file_encoded[0:100]
                     payload_list.append(item_dic)
 
